@@ -6,6 +6,7 @@
 
 import datetime
 import json
+import re
 import scrapy
 
 from DqdSpider.items import ArticleItem
@@ -48,7 +49,13 @@ class ListSpider(scrapy.Spider):
         article_times = map(lambda a: datetime.datetime.strptime(a['display_time'], "%Y-%m-%d %H:%M:%S"), data)
         yesterday = (datetime.date.today() - datetime.timedelta(days=1)).strftime("%Y-%m-%d 00:00:00")
         yesterday = datetime.datetime.strptime(yesterday, "%Y-%m-%d %H:%M:%S")
-        url, page = response.url.split('?page=')
-        next_page = int(page) + 1
+
+        url = response.url.split('?')[0]
+        m = re.match('.*page=(\d+).*', url)
+        if not m:
+            self.logger.error('URL %s doesnt have page')
+            return
+
+        next_page = int(m.group(1)) + 1
         if max(article_times) >= yesterday and next_page < 50:
             yield scrapy.Request(url='{}?page={}'.format(url, next_page), callback=self.parse)
