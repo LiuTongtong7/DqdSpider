@@ -51,9 +51,9 @@ class ListSpider(scrapy.Spider):
         yesterday = datetime.datetime.strptime(yesterday, "%Y-%m-%d %H:%M:%S")
 
         url = response.url.split('?')[0]
-        m = re.match('.*page=(\d+).*', url)
+        m = re.match('.*page=(\d+).*', response.url)
         if not m:
-            self.logger.error('URL %s doesnt have page')
+            self.logger.error('URL %s doesnt have page', response.url)
             return
 
         next_page = int(m.group(1)) + 1
