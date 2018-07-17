@@ -59,4 +59,3 @@ class ListSpider(scrapy.Spider):
         next_page = int(m.group(1)) + 1
         if max(article_times) >= yesterday and next_page < 50:
             yield scrapy.Request(url='{}?page={}'.format(url, next_page), callback=self.parse)
-Q
