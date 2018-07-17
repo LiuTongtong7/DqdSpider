@@ -204,3 +204,4 @@ venv.bak/
 logs/
 htmls/
 DqdSpider/settings.py
+run.py
